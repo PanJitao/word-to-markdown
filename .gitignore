@@ -12,6 +12,8 @@ src-tauri/gen/
 *.exe
 ExchangeMD.exe
 ExchangeMD-rebuild-source.zip
+# 例外：release/ 下的成品 exe 作为产出物入库，供直接下载
+!release/*.exe
 
 # 本地环境与编辑器
 .DS_Store
