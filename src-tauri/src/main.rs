@@ -119,12 +119,16 @@ fn open_default_apps_settings() -> Result<(), String> {
 }
 
 /// 把 ExchangeMD 注册进 .md 的「打开方式」列表（仅 Windows；HKCU，无需管理员）
+#[cfg(windows)]
 #[tauri::command]
 fn register_md_handler() -> Result<String, String> {
-    if !cfg!(windows) {
-        return Err("文件关联注册目前仅在 Windows 上支持".into());
-    }
     register_md_handler_windows()
+}
+
+#[cfg(not(windows))]
+#[tauri::command]
+fn register_md_handler() -> Result<String, String> {
+    Err("文件关联注册目前仅在 Windows 上支持".into())
 }
 
 // ---------- Windows 文件关联实现 ----------
