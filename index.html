@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ExchangeMD 文档转换工作台</title>
+  </head>
+  <body>
+    <div id="app">
+      <header class="topbar">
+        <div class="brand">
+          <span class="brand-mark" aria-hidden="true">Md</span>
+          <div class="brand-text">
+            <h1>ExchangeMD</h1>
+            <p>文档转换工作台</p>
+          </div>
+        </div>
+
+        <nav class="actions" aria-label="文件与转换操作">
+          <div class="action-group">
+            <span class="group-label">文件</span>
+            <button data-file="open-md" title="打开 .md 文件">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h9l5 5v11a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1zm9 1.5V9h3.5L14 5.5z" fill="currentColor"/></svg>
+              打开 MD
+            </button>
+            <button data-file="save-md" title="保存为 .md 文件">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V8l-4-4H5zm3 3h6v5H8V7zm-1 9h10v1H7v-1z" fill="currentColor"/></svg>
+              保存 MD
+            </button>
+          </div>
+
+          <div class="action-divider" aria-hidden="true"></div>
+
+          <div class="action-group">
+            <span class="group-label">转换为</span>
+            <button data-file="docx-to-md" data-convert title="把 Word 文档转成 Markdown">Word 转 MD</button>
+            <button data-file="xlsx-to-md" data-convert title="把 Excel 表格转成 Markdown">Excel 转 MD</button>
+            <button data-file="md-to-docx" data-convert title="选择 md 文件并导出为 Word">MD 转 Word</button>
+            <button class="primary" data-file="export-html" data-convert title="选择 md 文件并导出为 HTML">导出 HTML</button>
+          </div>
+        </nav>
+
+        <div class="settings-wrap">
+          <button id="settings-btn" class="settings-btn" title="系统设置" aria-haspopup="menu" aria-expanded="false">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8zm9 4a7 7 0 0 0-.1-1.2l2-1.5-2-3.4-2.3 1a7 7 0 0 0-2-1.2l-.4-2.5h-4l-.4 2.5a7 7 0 0 0-2 1.2l-2.3-1-2 3.4 2 1.5A7 7 0 0 0 3 12c0 .4 0 .8.1 1.2l-2 1.5 2 3.4 2.3-1c.6.5 1.3.9 2 1.2l.4 2.5h4l.4-2.5c.7-.3 1.4-.7 2-1.2l2.3 1 2-3.4-2-1.5c.1-.4.1-.8.1-1.2z" fill="currentColor"/></svg>
+            设置
+          </button>
+          <div id="settings-menu" class="settings-menu" role="menu" aria-label="系统设置">
+            <button role="menuitem" data-setting="open-with">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h10M4 17h7M17 14l4 3-4 3v-6z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              加入右键「打开方式」
+            </button>
+            <button role="menuitem" data-setting="default-app">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4l14 8-14 8V4z" fill="currentColor"/></svg>
+              设为默认 Markdown 程序
+            </button>
+            <p class="menu-hint">注册到本机用户账户，无需管理员权限；设置默认需在弹出的系统页面确认。</p>
+          </div>
+        </div>
+      </header>
+
+      <section class="toolbar" role="toolbar" aria-label="Markdown 格式">
+        <button class="icon-btn" data-action="h1" aria-label="一级标题" title="一级标题">H1</button>
+        <button class="icon-btn" data-action="h2" aria-label="二级标题" title="二级标题">H2</button>
+        <span class="toolbar-divider" aria-hidden="true"></span>
+        <button class="icon-btn" data-action="bold" aria-label="加粗 (Ctrl+B)" title="加粗 (Ctrl+B)"><strong>B</strong></button>
+        <button class="icon-btn" data-action="italic" aria-label="斜体 (Ctrl+I)" title="斜体 (Ctrl+I)"><em>I</em></button>
+        <span class="toolbar-divider" aria-hidden="true"></span>
+        <button data-action="list" title="无序列表"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>列表</button>
+        <button data-action="quote" title="引用"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7H4a1 1 0 0 0-1 1v4a1 1 0 0 0 1 1h2v3a3 3 0 0 1-3 3M20 7h-3a1 1 0 0 0-1 1v4a1 1 0 0 0 1 1h2v3a3 3 0 0 1-3 3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>引用</button>
+        <button data-action="table" title="插入表格"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h18v14H3zM3 10h18M3 15h18M9 5v14M15 5v14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>表格</button>
+        <button data-action="code" title="代码块"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 8l-4 4 4 4M15 8l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>代码</button>
+        <button data-action="link" title="插入链接"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7 0l2-2a5 5 0 0 0-7-7l-1 1M14 11a5 5 0 0 0-7 0l-2 2a5 5 0 0 0 7 7l1-1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>链接</button>
+        <span class="toolbar-spacer" aria-hidden="true"></span>
+        <button id="copy-btn" title="复制 Markdown 源码"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2" stroke="currentColor" stroke-width="2"/><path d="M5 15V5a2 2 0 0 1 2-2h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>复制</button>
+        <span class="shortcut-hint">Ctrl+B 加粗 · Ctrl+I 斜体 · Tab 缩进</span>
+      </section>
+
+      <section class="workspace" id="workspace">
+        <article class="panel editor-panel" id="editor-panel">
+          <div class="panel-header">
+            <h2>编辑器</h2>
+            <span id="file-label">未保存的草稿 · Markdown 源码</span>
+          </div>
+          <textarea id="editor" spellcheck="false" placeholder="在这里输入 Markdown 内容…" aria-label="Markdown 编辑器"></textarea>
+        </article>
+
+        <div class="splitter" id="splitter" role="separator" aria-orientation="vertical" aria-label="拖动调整编辑器与预览宽度" tabindex="0"></div>
+
+        <article class="panel preview-panel">
+          <div class="panel-header">
+            <h2>预览</h2>
+            <span>实时渲染</span>
+          </div>
+          <div id="preview" aria-label="Markdown 预览"></div>
+        </article>
+      </section>
+
+      <footer class="statusbar">
+        <span class="spinner" id="spinner" aria-hidden="true"></span>
+        <span id="status" role="status" aria-live="polite">就绪</span>
+        <span class="status-right">
+          <span id="word-count">0 字</span>
+        </span>
+      </footer>
+    </div>
+
+    <div id="toast" class="toast" role="alert" aria-live="assertive"></div>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

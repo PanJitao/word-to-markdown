@@ -1,0 +1,21 @@
+# 依赖
+node_modules/
+
+# 前端构建产物
+dist/
+
+# Rust / Tauri 构建产物
+src-tauri/target/
+src-tauri/gen/
+
+# 打包出的二进制 / 压缩包（体积大，不入库，由构建生成）
+*.exe
+ExchangeMD.exe
+ExchangeMD-rebuild-source.zip
+
+# 本地环境与编辑器
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.log
