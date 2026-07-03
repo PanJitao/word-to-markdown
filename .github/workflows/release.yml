@@ -1,0 +1,66 @@
+name: release
+
+# 打 Version_* / v* 标签时触发，也可手动运行
+on:
+  push:
+    tags:
+      - 'Version_*'
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write   # 创建 / 上传 Release 资源所需
+
+jobs:
+  publish:
+    name: build (${{ matrix.target }})
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      fail-fast: false   # 单个平台失败不影响其它平台继续构建
+      matrix:
+        include:
+          # Windows
+          - { runner: windows-latest,  target: x86_64-pc-windows-msvc,  label: windows-x64 }
+          - { runner: windows-latest,  target: aarch64-pc-windows-msvc, label: windows-arm64 }
+          # macOS（Apple Silicon + Intel）
+          - { runner: macos-latest,    target: aarch64-apple-darwin,    label: macos-arm64 }
+          - { runner: macos-latest,    target: x86_64-apple-darwin,     label: macos-x64 }
+          # Linux
+          - { runner: ubuntu-22.04,    target: x86_64-unknown-linux-gnu,  label: linux-x64 }
+          - { runner: ubuntu-22.04-arm, target: aarch64-unknown-linux-gnu, label: linux-arm64 }
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 安装 Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: 安装 Rust 工具链（含目标平台）
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+
+      - name: 安装 Linux 系统依赖
+        if: startsWith(matrix.runner, 'ubuntu')
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libwebkit2gtk-4.1-dev libssl-dev libgtk-3-dev \
+            libayatana-appindicator3-dev librsvg2-dev
+
+      - name: 安装前端依赖
+        run: npm install
+
+      - name: 构建并发布
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tagName: ${{ github.ref_name }}
+          releaseName: ${{ github.ref_name }}
+          releaseBody: 'ExchangeMD ${{ github.ref_name }} —— Windows (x64/arm64)、macOS (x64/arm64)、Linux (x64/arm64) 全平台构建。详见 README。'
+          releaseDraft: false
+          prerelease: false
+          args: --target ${{ matrix.target }}
